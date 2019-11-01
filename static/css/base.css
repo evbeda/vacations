@@ -1,3 +1,10 @@
 .content-wrapper {
   margin: 2em;
+  min-height: 90vh;
+}
+
+footer {
+  background-color: #eee;
+  height: 5em;
+  text-align: center;
 }
