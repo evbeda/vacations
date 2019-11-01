@@ -14,9 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from .views import HomeView
+from .views import (
+    HomeView,
+    VacationPrintView,
+)
 
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),
+    url(r'^print/(?P<pk>[0-9]+)/$', VacationPrintView.as_view(), name='print'),
 ]

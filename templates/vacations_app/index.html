@@ -4,14 +4,29 @@
     <title></title>
 </head>
 <body>
-
-    <h1>Employees</h1>
-    <ul>
-        {% for employee in object_list %}
-            <li>{{ employee.pub_date|date }} - {{ employee.headline }}</li>
-        {% empty %}
-            <li>No employees yet.</li>
+    <h1>Employee</h1>
+    {% if vacation %}
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th>#</th>
+          <th>To Date</th>
+          <th>From Date</th>
+        </tr>
+      </thead>
+       {% for vacation in object_list %}
+      <tbody>
+      <tr>
+          <th scope="row">1</th>
+          <td>{{ vacation.from_date|date }}</td>
+          <td>{{ vacation.to_date|date }}</td>
+        </tr>
+      </tbody>
         {% endfor %}
-    </ul>
+    </table>
+    {% else %}
+        <p class="lead">There are not vacations assigned to this user.</p>
+    {% endif %}
+        <a href="vacation-request">Request vacation</a>
 </body>
 {% endblock content %}
