@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from django.db import models
 from django.db.models.aggregates import Sum
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, UserManager
 
 
 class Employee(User):
@@ -14,6 +14,7 @@ class Employee(User):
 
 
 class Vacation(models.Model):
+    pepe = UserManager()
     from_date = models.DateField()
     to_date = models.DateField()
     employee = models.ForeignKey('Employee')

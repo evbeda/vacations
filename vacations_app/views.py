@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from vacations_app.models import Employee
 from django.views.generic.base import TemplateView
@@ -16,7 +17,9 @@ class HomeView(ListView):
     # model = Vacation
 
     def get_queryset(self):
-        queryset = Vacation.objects.filter(employee_id=1)
+        import ipdb;
+        ipdb.set_trace()
+        queryset = Vacation.objects.filter(employee_id=self.request.user.id)
         return queryset.all()
 
     def get_context_data(self, **kwargs):
