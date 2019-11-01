@@ -1,3 +1,18 @@
 {% extends 'vacations_app/base.html' %}
+{% load static %}
+{% block head %}
+  {{block.super}}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock head %}
 {% block content %}
+<div class="content-wrapper">
+  <h1>My Vacations</h1>
+</div>
+
+{% for object in object_list %}
+  <div class="card vacation-card">
+    <div class="card-body">{{object.from_date}} - {{object.to_date}}</div>
+  </div>
+{% endfor %}
+
 {% endblock content %}
