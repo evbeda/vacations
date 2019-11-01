@@ -1,3 +1,17 @@
 {% extends 'vacations_app/base.html' %}
 {% block content %}
+<head>
+    <title></title>
+</head>
+<body>
+
+    <h1>Employees</h1>
+    <ul>
+        {% for employee in object_list %}
+            <li>{{ employee.pub_date|date }} - {{ employee.headline }}</li>
+        {% empty %}
+            <li>No employees yet.</li>
+        {% endfor %}
+    </ul>
+</body>
 {% endblock content %}
