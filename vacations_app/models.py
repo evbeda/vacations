@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import timedelta
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -14,3 +16,8 @@ class Vacation(models.Model):
     from_date = models.DateField()
     to_date = models.DateField()
     employee = models.ForeignKey('Employee')
+    applicable_worked_year = models.IntegerField()
+
+    @property
+    def to_date_next_day(self):
+        return self.to_date + timedelta(days=1)
