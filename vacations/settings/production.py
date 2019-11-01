@@ -15,7 +15,7 @@ DATABASES = {
     }
 }
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_prod')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 INSTALLED_APPS += [  # noqa
     'whitenoise.runserver_nostatic'
