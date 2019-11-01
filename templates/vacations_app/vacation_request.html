@@ -1,0 +1,13 @@
+{% extends 'vacations_app/base.html' %}
+{% block content %}
+<h3>Vacation Request</h3>
+  <div class="row">
+      <div class="col-md-6">
+        <form action="{% url 'vacation-request' %}" method="post" class="form">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-info">Save</button>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

@@ -17,10 +17,12 @@ from django.conf.urls import url
 from .views import (
     HomeView,
     VacationPrintView,
+    VacationRequest,
 )
 
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),
+    url(r'^vacation-request$', VacationRequest.as_view(), name='vacation-request'),
     url(r'^print/(?P<pk>[0-9]+)/$', VacationPrintView.as_view(), name='print'),
 ]

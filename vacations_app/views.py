@@ -1,36 +1,41 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
-from vacations_app.models import Employee
-from django.views.generic.base import TemplateView
+from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView
 
-from .models import Vacation
-
-# Create your views here.
+from vacations_app.models import Vacation
 
 
 class HomeView(ListView):
     template_name= 'vacations_app/index.html'
-    # model = Vacation
 
     def get_queryset(self):
-        import ipdb;
-        ipdb.set_trace()
-        queryset = Vacation.objects.filter(employee_id=self.request.user.id)
-        return queryset.all()
+        if self.request.user.is_authenticated():
+            return Vacation.objects.filter(employee=self.request.user)
+        else:
+            return None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
 
 
-
-
-
-# Create your views here.
 class VacationPrintView(DetailView):
     template_name= 'vacations_app/vacation_print_form.html'
     model = Vacation
+
+
+class VacationRequest(CreateView):
+    template_name='vacations_app/vacation_request.html'
+    model = Vacation
+    fields = ['from_date', 'to_date', 'applicable_worked_year']
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.employee = self.request.user
+        return super().form_valid(form)
