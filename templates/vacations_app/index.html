@@ -1,4 +1,9 @@
 {% extends 'vacations_app/base.html' %}
+{% load static %}
+{% block head %}
+  {{block.super}}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock head %}
 {% block content %}
 <head>
     <title></title>
