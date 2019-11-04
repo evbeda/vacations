@@ -73,6 +73,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_by_email',
 )
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {'prompt': 'select_account', 'hd': 'eventbrite.com'}
+
 ROOT_URLCONF = 'vacations.urls'
 
 TEMPLATES = [

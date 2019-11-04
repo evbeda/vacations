@@ -25,6 +25,8 @@ MIDDLEWARE += [  # noqa
     'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 DB_FROM_ENV = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(DB_FROM_ENV)
 
@@ -60,7 +62,5 @@ LOGGING = {
         }
     }
 }
-
-DEBUG_PROPAGATE_EXCEPTIONS = True
 
 DEBUG = False
