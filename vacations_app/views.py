@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from io import BytesIO
+from datetime import timedelta
 
+from bootstrap_datepicker_plus import DatePickerInput
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import ListView
-from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
-
-from vacations_app.models import Vacation
 from xhtml2pdf import pisa
 
-from .models import Vacation
+from vacations_app.models import Vacation
+
 
 
 class HomeView(ListView):
@@ -33,12 +33,20 @@ class HomeView(ListView):
 class VacationRequest(CreateView):
     template_name='vacations_app/vacation_request.html'
     model = Vacation
-    fields = ['from_date', 'to_date', 'applicable_worked_year']
+    fields = ['from_date', 'days_quantity', 'applicable_worked_year']
 
     def get_success_url(self):
         return reverse_lazy('home')
 
+    def get_form(self):
+        form = super().get_form()
+        form.fields['from_date'].widget = DatePickerInput()
+        return form
+
+
     def form_valid(self, form):
+        days = form.instance.days_quantity
+        form.instance.to_date = form.instance.from_date + timedelta(days=days)
         form.instance.employee = self.request.user
         return super().form_valid(form)
 
@@ -49,7 +57,7 @@ class VacationPrintView(DetailView):
 
     def render_to_response(self, context, **response_kwargs):
         pdf = render_to_pdf(self.template_name, context)
-        return HttpResponse(pdf, content_type='application/pdf')        
+        return HttpResponse(pdf, content_type='application/pdf')
 
 
 def render_to_pdf(template_src, context_dict={}):

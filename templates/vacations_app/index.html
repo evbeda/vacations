@@ -8,12 +8,14 @@
 
 {% if user.is_authenticated %}
   <h1>Employee</h1>
+  <br>
   {% if object_list %}
     <table class="table">
       <thead class="thead-dark">
         <tr>
           <th>From Date</th>
           <th>To Date</th>
+          <th>Days</th>
           <th>Applicable Year</th>
           <th>Print</th>
         </tr>
@@ -23,6 +25,7 @@
       <tr>
           <td>{{ vacation.from_date|date }}</td>
           <td>{{ vacation.to_date|date }}</td>
+          <td>{{ vacation.days_quantity }}</td>
           <td>{{ vacation.applicable_worked_year }}</td>
           <td><a href="{% url 'print' pk=vacation.id %}">Print Request</a></td>
         </tr>

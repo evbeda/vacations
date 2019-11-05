@@ -3,9 +3,11 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  {% if user.is_authenticated %}
-    <p>Welcome {{user}}, <a href="{% url 'logout' %}">Logout</a></p>
-  {% else %}
-    <a href="{% url 'social:begin' 'google-oauth2' %}">Login</a>
-  {% endif %}
+  <div class="float-right ml-auto">
+    {% if user.is_authenticated %}
+      <div>Welcome {{user.first_name}}, <a href="{% url 'logout' %}">Logout</a></div>
+    {% else %}
+      <div> <a href="{% url 'social:begin' 'google-oauth2' %}">Login</a></div>
+    {% endif %}
+  </div>
 </nav>

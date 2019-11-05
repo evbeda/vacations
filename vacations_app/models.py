@@ -1,12 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import timedelta
+from datetime import date, timedelta
 from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError
+
+def validate_weekday(value):
+    if value.weekday() != 0:
+        raise ValidationError('The day you set to start your vacations must be a Monday')
+    else:
+        return value
+
+def validate_year(value):
+    current_year = date.today().year
+    if value > current_year:
+        raise ValidationError(f'The applicable worked year can not be greater than {current_year}')
+    else:
+        return value
 
 
 class UserManager(BaseUserManager):
@@ -76,10 +90,17 @@ class Employee(AbstractBaseUser, PermissionsMixin):
 
 
 class Vacation(models.Model):
-    from_date = models.DateField()
+    DAYS_CHOICES = [
+        (7, 7),
+        (14, 14),
+        (21, 21),
+        (28, 28),
+    ]
+    from_date = models.DateField(validators=[validate_weekday])
+    days_quantity = models.IntegerField(choices=DAYS_CHOICES)
     to_date = models.DateField()
     employee = models.ForeignKey('Employee')
-    applicable_worked_year = models.IntegerField()
+    applicable_worked_year = models.IntegerField(validators=[validate_year])
 
     @property
     def to_date_next_day(self):
