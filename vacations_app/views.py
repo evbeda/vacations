@@ -10,7 +10,6 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
-from django.views.generic.list import ListView
 from xhtml2pdf import pisa
 
 from vacations_app.models import Vacation

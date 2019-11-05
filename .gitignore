@@ -107,4 +107,4 @@ venv.bak/
 .idea
 .DS_Store
 
-*.sh.idea
+*.sh
