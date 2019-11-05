@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
     <title></title>
@@ -7,38 +8,123 @@
             size: A4 portrait;
             margin: 1cm;
         }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        .content {
+            text-align: justify;
+            font-size: 11pt;
+            margin: 40pt;
+        }
+
+        .content .date {
+            padding-top: 14pt;
+            text-align: right;
+            line-height: 24pt;
+        }
+
+        .content .paragraph {
+            text-indent: 32pt;
+            line-height: 24pt;
+            padding: unset;
+        }
+
+        .content .signature {
+            line-height: 14pt;
+        }
+
         .page-break{
             page-break-after: always;
+        }
+
+        .table-header {
+            font-size: 11pt;
+            text-align: center;
+            border: solid 0.5pt black;
+            font-weight: bold;
+        }
+
+        .table-header td {
+            padding-top: 4pt;
+        }
+
+        .document-title {
+            font-size: 14pt;
         }
       </style>  
 </head>
 <body>
-<p>Mendoza,………………………………...……. de 2019</p>
 
+    <table class="table-header">
+        <tr>
+            <td rowspan='2'>
+                <img src="./static/images/eventbrite_logo_2018.png" width="240px">
+            </td>
+            <td style="height: 32px;">Briteling Experience</td>
+            <td rowspan='2'>
+                Reg-BE-AR-06 <br>
+                Revisión: 01 <br>
+                Fecha: 26/5/2016<br>
+                Página: 1 de 2
+            </td>
+        </tr>
+        <tr>
+            <td class="document-title">
+                Acuerdo licencia por vacaciones
+            </td>
+        </tr>
+    </table>
+    <div class="content">
+        <p class="date">Mendoza, <b><u>{% now 'd \d\e F \d\e Y' %}</u></b></p>
+        <p class="paragraph">
+            Por medio de la presente, se deja constancia del acuerdo entre
+            <b><u>{{object.employee.first_name}} {{object.employee.last_name}}</u></b>,
+            y Eventbrite Argentina S.A.
+            Se pacta entre ambas partes que el empleado gozará de
+            <b><u>{{object.employee.initial_annual_vacations_days}}</u></b>
+            días corridos en concepto de Licencia por vacaciones correspondientes al periodo
+            <b><u>{{object.applicable_worked_year}}</u></b>.
+        </p>
 
+        <p class="paragraph">
+            Las mismas comienzan el día
+            <b><u>{{object.from_date}}</u></b>
+            y finalizan el día
+            <b><u>{{object.to_date}}</u></b>,
+            retomando sus labores habituales el día
+            <b><u>{{object.to_date_next_day}}</u></b>.
+            Finalizada esta licencia,
+            el saldo de vacaciones correspondiente a dicho periodo es de
+            <b><u>{{object.year_vacation_left}}</u></b> días.
+        </p>
 
-<p>Por medio de la presente, se deja constancia del acuerdo entre <b><u>{{object.employee.first_name}} {{object.employee.last_name}}</u></b>, y Eventbrite Argentina S.A . Se pacta entre ambas partes que el empleado gozará de <b><u>{{object.employee.initial_annual_vacations_days}}</u></b>. días corridos en concepto de Licencia por vacaciones correspondientes al periodo <b><u>{{object.applicable_worked_year}}</u></b>.</p>
-
-<p>Las mismas comienzan el día <b><u>{{object.from_date}}</u></b> y finalizan el
-día <b><u>{{object.to_date}}</u></b> retomando sus labores habituales el día <b><u>{{object.to_date_next_day}}</u></b>. del 2019. Finalizada esta licencia, el saldo de vacaciones correspondiente a dicho periodo es de <b><u>{{object.year_vacation_left}}</u></b> días.</p>
-
-<p>_________________________________</p>
-<p>Firma Briteling</p>
-<p></p>
-<p>_________________________________</p>
-<p>Aclaración</p>
-<p></p>
-<p>_________________________________</p>
-<p>DNI</p>
-<p></p>
-<p>_________________________________</p>
-<p>Firma Manager</p>
-<p></p>
-<p>_________________________________</p>
-<p>Aclaración</p>
-<p></p>
-<p>_________________________________</p>
-<p>Fecha de aprobación</p>
-<p></p>
+        <p class="signature">
+            _________________________________<br>
+            Firma Briteling
+        </p>
+        <p class="signature">
+            _________________________________<br>
+            Aclaración
+        </p>
+        <p class="signature">
+            _________________________________<br>
+            DNI
+        </p>
+        <p class="signature">
+            _________________________________<br>
+            Firma Manager
+        </p>
+        <p class="signature">
+            _________________________________<br>
+            Aclaración
+        </p>
+        <p class="signature">
+            _________________________________<br>
+            Fecha de aprobación
+        </p>
+        <p></p>
+    </div>
 </body>
 </html>
