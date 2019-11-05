@@ -18,11 +18,13 @@ from .views import (
     HomeView,
     VacationPrintView,
     VacationRequest,
+    VacationList,
 )
 
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),
     url(r'^vacation-request$', VacationRequest.as_view(), name='vacation-request'),
+    url(r'^vacations-list$', VacationList.as_view(), name='vacations-list'),
     url(r'^print/(?P<pk>[0-9]+)/$', VacationPrintView.as_view(), name='print'),
 ]

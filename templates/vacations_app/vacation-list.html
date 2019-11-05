@@ -7,35 +7,28 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-  <h1>Employee</h1>
-  <br>
-  {% if object_list %}
-    <table class="table">
+  <h1>Vacactions</h1>
+    <table class="table table-hover">
       <thead class="thead-dark">
         <tr>
+          <th>Employee</th>
           <th>From Date</th>
           <th>To Date</th>
-          <th>Days</th>
           <th>Applicable Year</th>
-          <th>Print</th>
         </tr>
       </thead>
        {% for vacation in object_list %}
       <tbody>
       <tr>
+          <td>{{ vacation.employee.first_name }} {{ vacation.employee.last_name }} </td>
           <td>{{ vacation.from_date|date }}</td>
           <td>{{ vacation.to_date|date }}</td>
-          <td>{{ vacation.days_quantity }}</td>
           <td>{{ vacation.applicable_worked_year }}</td>
-          <td><a href="{% url 'print' pk=vacation.id %}">Print Request</a></td>
         </tr>
       </tbody>
         {% endfor %}
     </table>
   {% else %}
-      <p class="lead">You have no vacations assigned</p>
-  {% endif %}
-      <a href="vacation-request">Request vacation</a>
-      <a href="vacations-list">View vacations requests</a>
 {% endif %}
 {% endblock content %}
+

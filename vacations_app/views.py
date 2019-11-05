@@ -10,6 +10,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
+from django.views.generic.list import ListView
 from xhtml2pdf import pisa
 
 from vacations_app.models import Vacation
@@ -49,6 +50,18 @@ class VacationRequest(CreateView):
         form.instance.to_date = form.instance.from_date + timedelta(days=days)
         form.instance.employee = self.request.user
         return super().form_valid(form)
+
+
+class VacationList(ListView):
+    template_name= 'vacations_app/vacation-list.html'
+
+    def get_queryset(self):
+        return Vacation.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
 
 
 class VacationPrintView(DetailView):
