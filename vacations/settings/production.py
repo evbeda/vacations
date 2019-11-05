@@ -3,8 +3,8 @@ import dj_database_url
 
 ALLOWED_HOSTS = [
     'vacationsqa.herokuapp.com',
-    'evb-vacations-qa.herokuapp.com',
-    'evb-vacations.herokuapp.com',
+    'evb-days-off-qa.herokuapp.com',
+    'evb-days-off.herokuapp.com',
 ]
 
 DATABASES = {
