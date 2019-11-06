@@ -4,6 +4,7 @@ from io import BytesIO
 from datetime import timedelta
 
 from bootstrap_datepicker_plus import DatePickerInput
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.urls import reverse_lazy
@@ -11,6 +12,7 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from xhtml2pdf import pisa
+from vacations_app import CAN_VIEW_OTHER_VACATIONS
 
 from vacations_app.models import Vacation
 
@@ -27,6 +29,10 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if self.request.user.has_perm('vacations_app.can_view_other_vacations'):
+            context['staff_user'] = True
+        else:
+            context['staff_user'] = False
         return context
 
 
@@ -51,8 +57,9 @@ class VacationRequest(CreateView):
         return super().form_valid(form)
 
 
-class VacationList(ListView):
+class VacationList(PermissionRequiredMixin, ListView):
     template_name= 'vacations_app/vacation-list.html'
+    permission_required = CAN_VIEW_OTHER_VACATIONS
 
     def get_queryset(self):
         return Vacation.objects.all()

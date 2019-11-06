@@ -36,6 +36,8 @@
       <p class="lead">You have no vacations assigned</p>
   {% endif %}
       <a href="vacation-request">Request vacation</a>
-      <a href="vacations-list">View vacations requests</a>
+      {% if staff_user %}
+        <a href="vacations-list">View vacations requests</a>
+      {% endif %}
 {% endif %}
 {% endblock content %}
