@@ -61,7 +61,7 @@ class UserManager(BaseUserManager):
 
 
 class Employee(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField( unique=True)
+    email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -69,6 +69,13 @@ class Employee(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     job_start_date = models.DateField(null=True)
     initial_annual_vacations_days = models.IntegerField(default=14)
+    team = models.ForeignKey(
+        'Team',
+        on_delete=models.SET_NULL,
+        related_name='members',
+        null=True,
+        blank=True,
+    )
 
     objects = UserManager()
 
@@ -118,3 +125,17 @@ class Holiday(models.Model):
 
     def __str__(self):
         return f'{self.date.year} - {self.name}'
+
+
+class Team(models.Model):
+    name = models.CharField(max_length=30)
+    engineer_manager = models.OneToOneField(
+        'Employee',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='managed_team',
+    )
+
+    def __str__(self):
+        return self.name

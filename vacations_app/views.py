@@ -17,9 +17,8 @@ from vacations_app import CAN_VIEW_OTHER_VACATIONS
 from vacations_app.models import Vacation
 
 
-
 class HomeView(ListView):
-    template_name= 'vacations_app/index.html'
+    template_name = 'vacations_app/index.html'
 
     def get_queryset(self):
         if self.request.user.is_authenticated():
@@ -37,7 +36,7 @@ class HomeView(ListView):
 
 
 class VacationRequest(CreateView):
-    template_name='vacations_app/vacation_request.html'
+    template_name = 'vacations_app/vacation_request.html'
     model = Vacation
     fields = ['from_date', 'days_quantity', 'applicable_worked_year']
 
@@ -49,7 +48,6 @@ class VacationRequest(CreateView):
         form.fields['from_date'].widget = DatePickerInput()
         return form
 
-
     def form_valid(self, form):
         days = form.instance.days_quantity
         form.instance.to_date = form.instance.from_date + timedelta(days=days)
@@ -58,7 +56,7 @@ class VacationRequest(CreateView):
 
 
 class VacationList(PermissionRequiredMixin, ListView):
-    template_name= 'vacations_app/vacation-list.html'
+    template_name = 'vacations_app/vacation-list.html'
     permission_required = CAN_VIEW_OTHER_VACATIONS
 
     def get_queryset(self):
@@ -67,7 +65,6 @@ class VacationList(PermissionRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-
 
 
 class VacationPrintView(DetailView):

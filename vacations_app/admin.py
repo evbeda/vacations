@@ -5,9 +5,11 @@ from django.contrib import admin
 from .models import (
     Employee,
     Holiday,
+    Team,
     Vacation,
 )
 
 admin.site.register(Employee)
 admin.site.register(Vacation)
 admin.site.register(Holiday)
+admin.site.register(Team)
