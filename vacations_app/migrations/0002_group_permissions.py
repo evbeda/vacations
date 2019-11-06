@@ -6,16 +6,21 @@ from django.db import migrations
 from django.contrib.contenttypes.models import ContentType
 from vacations_app.permissions import create_groups_and_apply_permisssions
 
+
 def add_group_permissions(*args, **kwargs):
-    content_type, _ = ContentType.objects.get_or_create(app_label='vacations_app',model='user')
+    content_type, _ = ContentType.objects.get_or_create(app_label='vacations_app', model='user')
 
     groups = {
         'staff': [
             ('can_view_other_vacations', 'Can view other vacations', content_type)
-        ]
+        ],
+        'manager': [
+            ('can_view_team_members_vacations', 'Can view team members vacations', content_type)
+        ],
     }
 
     create_groups_and_apply_permisssions(groups)
+
 
 class Migration(migrations.Migration):
 
