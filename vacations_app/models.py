@@ -129,12 +129,12 @@ class Holiday(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=30)
-    engineer_manager = models.OneToOneField(
+    engineer_manager = models.ForeignKey(
         'Employee',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='managed_team',
+        related_name='managed_teams',
     )
 
     def __str__(self):

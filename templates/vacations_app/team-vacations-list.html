@@ -1,0 +1,33 @@
+{% extends 'vacations_app/base.html' %}
+{% load static %}
+{% block head %}
+  {{block.super}}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock head %}
+{% block content %}
+
+{% for team, vacations in object_list.items %}
+<h1>Vacations for team {{team}}</h1>
+<table class="table table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th>Employee</th>
+      <th>From Date</th>
+      <th>To Date</th>
+      <th>Applicable Year</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for vacation in vacations %}
+    <tr>
+      <td>{{ vacation.employee.first_name }} {{ vacation.employee.last_name }}</td>
+      <td>{{ vacation.from_date|date }}</td>
+      <td>{{ vacation.to_date|date }}</td>
+      <td>{{ vacation.applicable_worked_year }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endfor %}
+
+{% endblock content %}

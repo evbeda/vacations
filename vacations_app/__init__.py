@@ -1,7 +1,2 @@
-STAFF_GROUP = [
-        'paula@eventbrite.com',
-        'marianar@eventbrite.com',
-    ]
-
 CAN_VIEW_OTHER_VACATIONS = 'vacations_app.can_view_other_vacations'
-
+CAN_VIEW_TEAM_MEMBERS_VACATIONS = 'vacations_app.can_view_team_members_vacations'

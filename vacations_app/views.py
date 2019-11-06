@@ -12,8 +12,11 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from xhtml2pdf import pisa
-from vacations_app import CAN_VIEW_OTHER_VACATIONS
 
+from vacations_app import (
+    CAN_VIEW_OTHER_VACATIONS,
+    CAN_VIEW_TEAM_MEMBERS_VACATIONS,
+)
 from vacations_app.models import Vacation
 
 
@@ -28,10 +31,8 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.has_perm('vacations_app.can_view_other_vacations'):
-            context['staff_user'] = True
-        else:
-            context['staff_user'] = False
+        context['staff_user'] = self.request.user.has_perm('vacations_app.can_view_other_vacations')
+        context['manager_user'] = self.request.user.has_perm('vacations_app.can_view_team_members_vacations')
         return context
 
 
@@ -64,6 +65,25 @@ class VacationList(PermissionRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        return context
+
+
+class TeamVacationsList(PermissionRequiredMixin, ListView):
+    template_name = 'vacations_app/team-vacations-list.html'
+    permission_required = CAN_VIEW_TEAM_MEMBERS_VACATIONS
+
+    def get_queryset(self):
+        managed_teams = self.request.user.managed_teams.all()
+        all_vacations = Vacation.objects.filter(employee__team__in=managed_teams)
+        vacations_by_team = {
+            team.name: all_vacations.filter(employee__team=team)
+            for team in managed_teams
+        }
+        return vacations_by_team
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['teams'] = [team.name for team in self.request.user.managed_teams.all()]
         return context
 
 
