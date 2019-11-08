@@ -15,6 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from .views import (
+    AssignedVacationCreateView,
+    AssignedVacationDeleteView,
+    AssignedVacationsList,
+    AssignedVacationUpdateView,
     HolidayCreateView,
     HolidayUpdateView,
     HolidayDeleteView,
@@ -34,6 +38,10 @@ urlpatterns = [
     url(r'^vacation/admin-request$', AdminVacationRequest.as_view(), name='vacation-admin-request'),
     url(r'^vacations$', VacationList.as_view(), name='vacations-list'),
     url(r'^vacations/team$', TeamVacationsList.as_view(), name='vacations-team'),
+    url(r'^assigned_vacations$', AssignedVacationsList.as_view(), name='assigned-vacations-list'),
+    url(r'^assigned_vacations/create$', AssignedVacationCreateView.as_view(), name='assigned-vacations-create'),
+    url(r'^assigned_vacations/update/(?P<pk>[0-9]+)/$', AssignedVacationUpdateView.as_view(), name='assigned-vacations-update'),
+    url(r'^assigned_vacations/delete/(?P<pk>[0-9]+)/$', AssignedVacationDeleteView.as_view(), name='assigned-vacations-delete'),
     url(r'^holidays$', HolidayList.as_view(), name='holidays-list'),
     url(r'^holidays/create$', HolidayCreateView.as_view(), name='holidays-create'),
     url(r'^holidays/update/(?P<pk>[0-9]+)/$', HolidayUpdateView.as_view(), name='holidays-update'),

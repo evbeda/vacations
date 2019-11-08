@@ -23,6 +23,7 @@ from vacations_app import (
     CAN_VIEW_TEAM_MEMBERS_VACATIONS,
 )
 from vacations_app.models import (
+    AssignedVacations,
     Holiday,
     Vacation,
     validate_from_date,
@@ -184,3 +185,28 @@ class HolidayUpdateView(PermissionRequiredMixin, UpdateView):
             widget=DatePickerInput(),
         )
         return form
+
+
+class AssignedVacationsList(PermissionRequiredMixin, ListView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = AssignedVacations
+
+
+class AssignedVacationCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = AssignedVacations
+    fields = '__all__'
+    success_url = reverse_lazy('assigned-vacations-list')
+
+
+class AssignedVacationUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = AssignedVacations
+    fields = '__all__'
+    success_url = reverse_lazy('assigned-vacations-list')
+
+
+class AssignedVacationDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = AssignedVacations
+    success_url = reverse_lazy('assigned-vacations-list')
