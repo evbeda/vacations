@@ -5,6 +5,7 @@ from datetime import timedelta
 
 from bootstrap_datepicker_plus import DatePickerInput
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django import forms
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.urls import reverse_lazy
@@ -47,6 +48,22 @@ class VacationRequest(CreateView):
     def get_form(self):
         form = super().get_form()
         form.fields['from_date'].widget = DatePickerInput()
+        form.fields['applicable_worked_year'] = forms.ChoiceField(
+            choices=(
+                (2016, 2016, ),
+                (2017, 2017, ),
+                (2018, 2018, ),
+                (2019, 2019, ),
+            )
+        )
+        form.fields['days_quantity'] = forms.ChoiceField(
+            choices=(
+                (7, 7),
+                (14, 14),
+                (21, 21),
+                (28, 28),
+            )
+        )
         return form
 
     def form_valid(self, form):
