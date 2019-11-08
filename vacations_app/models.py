@@ -91,7 +91,7 @@ class Employee(AbstractBaseUser, PermissionsMixin):
 
 class Vacation(models.Model):
 
-    from_date = models.DateField(validators=[validate_from_date])
+    from_date = models.DateField()
     days_quantity = models.IntegerField()
     to_date = models.DateField()
     employee = models.ForeignKey('Employee')

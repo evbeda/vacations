@@ -17,6 +17,7 @@ from django.conf.urls import url
 from .views import (
     HomeView,
     TeamVacationsList,
+    AdminVacationRequest,
     VacationList,
     VacationPrintView,
     VacationRequest,
@@ -26,6 +27,7 @@ from .views import (
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),
     url(r'^vacation-request$', VacationRequest.as_view(), name='vacation-request'),
+    url(r'^vacation-admin-request$', AdminVacationRequest.as_view(), name='vacation-admin-request'),
     url(r'^vacations-list$', VacationList.as_view(), name='vacations-list'),
     url(r'^vacations-team$', TeamVacationsList.as_view(), name='vacations-team'),
     url(r'^print/(?P<pk>[0-9]+)/$', VacationPrintView.as_view(), name='print'),
