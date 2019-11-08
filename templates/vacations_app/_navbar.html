@@ -5,9 +5,9 @@
   </button>
   <div class="float-right ml-auto">
     {% if user.is_authenticated %}
-      <div>Welcome {{user.first_name}}, <a href="{% url 'logout' %}">Logout</a></div>
+      <div>Welcome {{user.first_name}}  <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a></div>
     {% else %}
-      <div> <a href="{% url 'social:begin' 'google-oauth2' %}">Login</a></div>
+      <div> <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-primary">Login</a></div>
     {% endif %}
   </div>
 </nav>
