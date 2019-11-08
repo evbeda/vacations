@@ -1,18 +1,12 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.test import TestCase, RequestFactory
-
-# Create your tests here.
 from django.urls import reverse
-from social_core.tests.models import User
 
 from vacations_app.models import Employee, Vacation
 
 
 class HomeViewTest(TestCase):
 
-    def SetUp(self):
+    def setUp(self):
         self.factory = RequestFactory()
 
         self.employee = Employee.objects.create(
@@ -21,12 +15,14 @@ class HomeViewTest(TestCase):
         )
         self.vacation = Vacation.objects.create(
             from_date = '2019-09-14',
-            to_date = '2019-09-14',
+            to_date = '2019-09-15',
+            days_quantity = 2,
+            applicable_worked_year = 2018,
             employee = self.employee,
         )
     def test_home_view(self):
         request = self.factory.get(reverse('home'))
-        request.user = User.objects.create_user(
-            username='test', email='test@test.com', password='secret')
-        import ipdb;
-        ipdb.set_trace()
+        request.user = Employee.objects.create_user(
+            email='test@test.com',
+            password='secret',
+        )

@@ -134,3 +134,11 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
+
+class AssignedVacations(models.Model):
+    worked_year = models.IntegerField()
+    total_days = models.IntegerField()
+    employee = models.ForeignKey('Employee')
+
+    def __str__(self):
+        return f'{self.worked_year} - {self.total_days} days'
