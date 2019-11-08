@@ -135,6 +135,7 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
+
 class AssignedVacations(models.Model):
     worked_year = models.IntegerField()
     total_days = models.IntegerField()

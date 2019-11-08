@@ -35,13 +35,14 @@
   {% else %}
     <p class="lead">You have no vacations assigned</p>
   {% endif %}
-  <a href="vacation-request" class="btn btn-primary">Request vacation</a>
+  <a href="{% url 'vacation-request' %}" class="btn btn-primary">Request vacation</a>
   {% if manager_user %}
-    <a href="vacations-team" class="btn btn-info">View Team vacations</a>
+    <a href="{% url 'vacations-team' %}" class="btn btn-info">View Team vacations</a>
   {% endif %}
   {% if staff_user %}
-    <a href="vacation-admin-request" class="btn btn-warning">Admin Request vacation</a>
-    <a href="vacations-list" class="btn btn-info">View vacations requests</a>
+    <a href="{% url 'vacation-admin-request' %}" class="btn btn-warning">Admin Request vacation</a>
+    <a href="{% url 'vacations-list' %}" class="btn btn-info">View vacations requests</a>
+    <a href="{% url 'holidays-list' %}" class="btn btn-info">View Holidays</a>
   {% endif %}
 {% endif %}
 {% endblock content %}

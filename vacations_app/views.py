@@ -11,7 +11,11 @@ from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import (
+    CreateView,
+    DeleteView,
+    UpdateView,
+)
 from xhtml2pdf import pisa
 
 from vacations_app import (
@@ -19,6 +23,7 @@ from vacations_app import (
     CAN_VIEW_TEAM_MEMBERS_VACATIONS,
 )
 from vacations_app.models import (
+    Holiday,
     Vacation,
     validate_from_date,
 )
@@ -102,13 +107,7 @@ class AdminVacationRequest(BaseVacationRequest):
 class VacationList(PermissionRequiredMixin, ListView):
     template_name = 'vacations_app/vacation-list.html'
     permission_required = CAN_VIEW_OTHER_VACATIONS
-
-    def get_queryset(self):
-        return Vacation.objects.all()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    model = Vacation
 
 
 class TeamVacationsList(PermissionRequiredMixin, ListView):
@@ -145,3 +144,43 @@ def render_to_pdf(template_src, context_dict={}):
     result = BytesIO()
     pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
     return HttpResponse(result.getvalue(), content_type='application/pdf') if not pdf.err else None
+
+
+class HolidayList(PermissionRequiredMixin, ListView):
+    template_name = 'vacations_app/holiday-list.html'
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Holiday
+
+
+class HolidayCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Holiday
+    fields = '__all__'
+    success_url = reverse_lazy('holidays-list')
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields['date'] = forms.DateField(
+            widget=DatePickerInput(),
+        )
+        return form
+
+
+class HolidayDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Holiday
+    success_url = reverse_lazy('holidays-list')
+
+
+class HolidayUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Holiday
+    fields = '__all__'
+    success_url = reverse_lazy('holidays-list')
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields['date'] = forms.DateField(
+            widget=DatePickerInput(),
+        )
+        return form
