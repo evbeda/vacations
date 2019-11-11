@@ -77,7 +77,7 @@
         </tr>
     </table>
     <div class="content">
-        <p class="date">Mendoza, <b><u>{% now 'd \d\e F \d\e Y' %}</u></b></p>
+        <p class="date">Mendoza, <b><u>{{object.created | date:"F j, Y"}}</u></b></p>
         <p class="paragraph">
             Por medio de la presente, se deja constancia del acuerdo entre
             <b><u>{{object.employee.first_name}} {{object.employee.last_name}}</u></b>,
@@ -90,11 +90,11 @@
 
         <p class="paragraph"> 
             Las mismas comienzan el día
-            <b><u>{{object.from_date}}</u></b>
+            <b><u>{{object.from_date | date:"F j, Y"}}</u></b>
             y finalizan el día
-            <b><u>{{object.to_date}}</u></b>,
+            <b><u>{{object.to_date | date:"F j, Y"}}</u></b>,
             retomando sus labores habituales el día
-            <b><u>{{object.to_date_next_day}}</u></b>.
+            <b><u>{{object.to_date_next_day | date:"F j, Y"}}</u></b>.
             Finalizada esta licencia,
             el saldo de vacaciones correspondiente a dicho periodo es de
             <b><u>{{object.year_vacation_left}}</u></b> días.

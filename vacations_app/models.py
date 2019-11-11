@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from datetime import date, timedelta
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin
@@ -90,7 +87,7 @@ class Employee(AbstractBaseUser, PermissionsMixin):
 
 
 class Vacation(models.Model):
-
+    created = models.DateTimeField(auto_now_add=True)
     from_date = models.DateField()
     days_quantity = models.IntegerField()
     to_date = models.DateField()
@@ -109,8 +106,7 @@ class Vacation(models.Model):
         )
         total = 0
         for vacation in vacations:
-            vacation_diff = vacation.to_date - vacation.from_date
-            total += vacation_diff.days
+            total += vacation.days_quantity
         return self.employee.initial_annual_vacations_days - total
 
 
