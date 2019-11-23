@@ -10,6 +10,7 @@ Django==1.11.24
 django-bootstrap-datepicker-plus==3.0.5
 django-bootstrap4==1.0.1
 django-widget-tweaks==1.4.5
+freezegun==0.3.12
 gunicorn==19.9.0
 html5lib==1.0.1
 idna==2.8
@@ -18,6 +19,7 @@ ipython==7.9.0
 ipython-genutils==0.2.0
 jedi==0.15.1
 oauthlib==3.1.0
+parameterized==0.7.1
 parso==0.5.1
 pexpect==4.7.0
 pickleshare==0.7.5
@@ -28,6 +30,7 @@ ptyprocess==0.6.0
 Pygments==2.4.2
 PyJWT==1.7.1
 PyPDF2==1.26.0
+python-dateutil==2.8.1
 python-openid==2.2.5
 python3-openid==3.1.0
 pytz==2019.3

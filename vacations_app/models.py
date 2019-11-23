@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import date, timedelta
+from datetime import (
+    date,
+    datetime,
+    timedelta,
+)
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
@@ -87,6 +91,66 @@ class Employee(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name
+
+    def get_available_vacations(self):
+        # Antigüedad  Días de vacaciones al año
+        # Menor a 6 meses
+
+        # Entre 4 y 7 semanas de trabajo
+        # Entre 8 y 11 semanas de trabajo
+        # Entre 12 y 15 semanas de trabajo
+        # Entre 16 y 19 semanas de trabajo
+        # Más de 20 semanas de trabajo
+
+        # 1 día
+        # 2 días corridos
+        # 3 días corridos
+        # 4 días corridos
+        # 5 días corridos
+        # Más de 6 meses hasta 5 años 14 días corridos
+        # Más de 5 años hasta 10 años 21 días
+        # Más de 10 años hasta 20 años    28 días
+        # Más de 20 años  35 días
+
+        now = datetime.now()
+        from_year = self.job_start_date.year
+        available_vacations = {}
+
+        if from_year >= 2019:
+            if self.job_start_date.month >= 8:
+                eoy_date = datetime(from_year, 12, 31)
+                monday_job_start_date = (self.job_start_date - timedelta(days=self.job_start_date.weekday()))
+                monday_eoy = (eoy_date - timedelta(days=eoy_date.weekday()))
+                weeks = ((monday_eoy - monday_job_start_date).days // 7) or 1
+                initial_annual_vacations_days = (weeks - 1) // 4
+            else:
+                initial_annual_vacations_days = self.initial_annual_vacations_days
+
+            if initial_annual_vacations_days > 0:
+                available_vacations[from_year] = initial_annual_vacations_days
+            generate_from_year = from_year
+        else:
+            generate_from_year = 2018
+
+        if now.month >= 8:
+            to_year = now.year
+        else:
+            to_year = now.year - 1
+
+        for year in range(generate_from_year + 1, to_year + 1):
+            additional_days_for_old = ((year - from_year) // 5) * 7
+            available_vacations[year] = self.initial_annual_vacations_days + additional_days_for_old
+
+        for assignedvacation in self.assignedvacations_set.all():
+            available_vacations[assignedvacation.worked_year] = assignedvacation.total_days
+
+        for vacation in self.vacation_set.all():
+            if vacation.applicable_worked_year in available_vacations:
+                available_vacations[vacation.applicable_worked_year] -= vacation.days_quantity
+                if available_vacations[vacation.applicable_worked_year] <= 0:
+                    del available_vacations[vacation.applicable_worked_year]
+
+        return available_vacations
 
 
 class Vacation(models.Model):
