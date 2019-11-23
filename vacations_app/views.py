@@ -64,7 +64,7 @@ class BaseVacationRequest(CreateView):
 
     def form_valid(self, form):
         days = form.instance.days_quantity
-        form.instance.to_date = form.instance.from_date + timedelta(days=days)
+        form.instance.to_date = form.instance.from_date + timedelta(days=days - 1)
         return super().form_valid(form)
 
 
