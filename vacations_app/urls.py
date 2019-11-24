@@ -19,6 +19,8 @@ from .views import (
     AssignedVacationDeleteView,
     AssignedVacationsList,
     AssignedVacationUpdateView,
+    EmployeeList,
+    EmployeeUpdateView,
     HolidayCreateView,
     HolidayUpdateView,
     HolidayDeleteView,
@@ -34,6 +36,8 @@ from .views import (
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),
+    url(r'^employeess$', EmployeeList.as_view(), name='employees-list'),
+    url(r'^employeess/update/(?P<pk>[0-9]+)/$', EmployeeUpdateView.as_view(), name='employee-update'),
     url(r'^vacation/request$', VacationRequest.as_view(), name='vacation-request'),
     url(r'^vacation/admin-request$', AdminVacationRequest.as_view(), name='vacation-admin-request'),
     url(r'^vacations$', VacationList.as_view(), name='vacations-list'),

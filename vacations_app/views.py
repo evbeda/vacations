@@ -25,6 +25,7 @@ from vacations_app import (
 )
 from vacations_app.models import (
     AssignedVacations,
+    Employee,
     Holiday,
     Vacation,
     validate_from_date,
@@ -244,3 +245,28 @@ class AssignedVacationDeleteView(PermissionRequiredMixin, DeleteView):
     permission_required = CAN_VIEW_OTHER_VACATIONS
     model = AssignedVacations
     success_url = reverse_lazy('assigned-vacations-list')
+
+
+class EmployeeList(PermissionRequiredMixin, ListView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+
+    def get_queryset(self):
+        return Employee.objects.all().order_by('-email')
+
+
+class EmployeeUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Employee
+    fields = [
+        'first_name', 'last_name',
+        'is_staff', 'job_start_date', 'initial_annual_vacations_days', 'team',
+    ]
+    success_url = reverse_lazy('employees-list')
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields['job_start_date'] = forms.DateField(
+            widget=DatePickerInput(),
+        )
+        return form
+

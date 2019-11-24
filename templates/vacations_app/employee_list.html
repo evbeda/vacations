@@ -1,0 +1,48 @@
+{% extends 'vacations_app/base.html' %}
+{% load static %}
+{% block head %}
+  {{block.super}}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock head %}
+{% block content %}
+
+{% if user.is_authenticated %}
+  <h1>Employees</h1>
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>Email</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Team</th>
+          <th>Job start date</th>
+          <th>Initial annual vacations days</th>
+          <th>Available vacations</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+       {% for employee in object_list %}
+      <tbody>
+      <tr>
+          <td>{{ employee.email }}</td>
+          <td>{{ employee.first_name }}</td>
+          <td>{{ employee.last_name }}</td>
+          <td>{{ employee.team }}</td>
+          <td>{{ employee.job_start_date|date }}</td>
+          <td>{{ employee.initial_annual_vacations_days }}</td>
+          <td>
+           {% for available_vacation_year, available_vacation_days in employee.get_available_vacations.items %}
+              <p>Year: {{ available_vacation_year }} Days: {{ available_vacation_days }}</p>
+           {% endfor%}
+          </td>
+          <td>
+            <a href="{% url 'employee-update' employee.id %}" class="btn btn-primary">Update employee</a>
+          </td>
+        </tr>
+      </tbody>
+        {% endfor %}
+    </table>
+
+  {% else %}
+{% endif %}
+{% endblock content %}
