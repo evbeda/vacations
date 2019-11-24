@@ -251,7 +251,7 @@ class EmployeeList(PermissionRequiredMixin, ListView):
     permission_required = CAN_VIEW_OTHER_VACATIONS
 
     def get_queryset(self):
-        return Employee.objects.all().order_by('-email')
+        return Employee.objects.all().order_by('email')
 
 
 class EmployeeUpdateView(PermissionRequiredMixin, UpdateView):
