@@ -14,6 +14,7 @@
           <th>Employee</th>
           <th>From Date</th>
           <th>To Date</th>
+          <th>Days quantity</th>
           <th>Applicable Year</th>
         </tr>
       </thead>
@@ -23,6 +24,7 @@
           <td>{{ vacation.employee.first_name }} {{ vacation.employee.last_name }} </td>
           <td>{{ vacation.from_date|date }}</td>
           <td>{{ vacation.to_date|date }}</td>
+          <td>{{ vacation.days_quantity }}</td>
           <td>{{ vacation.applicable_worked_year }}</td>
         </tr>
       </tbody>
