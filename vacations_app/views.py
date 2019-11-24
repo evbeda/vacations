@@ -144,7 +144,9 @@ class AdminVacationRequest(CreateView):
 class VacationListView(PermissionRequiredMixin, ListView):
     template_name = 'vacations_app/vacation-list.html'
     permission_required = CAN_VIEW_OTHER_VACATIONS
-    model = Vacation
+
+    def get_queryset(self):
+        return Vacation.objects.all().order_by('-from_date')
 
 
 class TeamVacationsListView(PermissionRequiredMixin, ListView):
