@@ -171,6 +171,14 @@ class Vacation(models.Model):
         available_vacations = self.employee.get_available_vacations()
         return available_vacations.get(self.applicable_worked_year, 0)
 
+    def __str__(self):
+        return '{}: from {} to {} ({} days) of {}'.format(
+            self.employee,
+            self.from_date,
+            self.to_date,
+            self.days_quantity,
+            self.applicable_worked_year,
+        )
 
 class Holiday(models.Model):
     name = models.CharField(max_length=50)
