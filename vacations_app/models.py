@@ -168,15 +168,8 @@ class Vacation(models.Model):
 
     @property
     def year_vacation_left(self):
-        vacations = Vacation.objects.filter(
-            employee=self.employee,
-            applicable_worked_year=self.applicable_worked_year,
-        )
-        total = 0
-        for vacation in vacations:
-            vacation_diff = vacation.to_date - vacation.from_date
-            total += vacation_diff.days
-        return self.employee.initial_annual_vacations_days - total
+        available_vacations = self.employee.get_available_vacations()
+        return available_vacations.get(self.applicable_worked_year, 0)
 
 
 class Holiday(models.Model):
