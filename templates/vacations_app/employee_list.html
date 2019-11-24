@@ -37,6 +37,7 @@
           </td>
           <td>
             <a href="{% url 'employee-update' employee.id %}" class="btn btn-primary">Update employee</a>
+            <a href="{% url 'assigned-vacations-create' %}?employee_id={{ employee.id }}" class="btn btn-primary">Create Assigned Vacations</a>
           </td>
         </tr>
       </tbody>

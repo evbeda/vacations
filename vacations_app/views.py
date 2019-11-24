@@ -8,7 +8,10 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django import forms
 from django.http import HttpResponse
 from django.template.loader import get_template
-from django.urls import reverse_lazy
+from django.urls import (
+    reverse,
+    reverse_lazy,
+)
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import (
@@ -233,8 +236,22 @@ class AssignedVacationsListView(PermissionRequiredMixin, ListView):
 class AssignedVacationCreateView(PermissionRequiredMixin, CreateView):
     permission_required = CAN_VIEW_OTHER_VACATIONS
     model = AssignedVacations
+
     fields = '__all__'
-    success_url = reverse_lazy('assigned-vacations-list')
+
+    def get_success_url(self):
+        employee_id = self.request.GET.get('employee_id')
+        if employee_id:
+            return reverse('employees-list')
+        else:
+            return reverse('assigned-vacations-list')
+
+    def get_form(self):
+        form = super().get_form()
+        employee_id = self.request.GET.get('employee_id')
+        if employee_id:
+            form.fields['employee'].initial = Employee.objects.get(pk=employee_id)
+        return form
 
 
 class AssignedVacationUpdateView(PermissionRequiredMixin, UpdateView):
