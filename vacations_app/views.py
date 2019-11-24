@@ -14,6 +14,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import (
     CreateView,
     DeleteView,
+    FormView,
     UpdateView,
 )
 from xhtml2pdf import pisa
@@ -46,12 +47,82 @@ class HomeView(ListView):
         return context
 
 
-class BaseVacationRequest(CreateView):
-    model = Vacation
+class VacationRequestForm(forms.Form):
+    from_date = forms.DateField(
+        widget=DatePickerInput(),
+        validators=[validate_from_date],
+    )
+    year_days_quantity = forms.ChoiceField()
+
+
+class VacationRequest(FormView):
+    template_name = 'vacations_app/vacation_request.html'
+    form_class = VacationRequestForm
     success_url = reverse_lazy('home')
 
     def get_form(self):
         form = super().get_form()
+
+        available_vacations = self.request.user.get_available_vacations()
+        days_quantity_choices = []
+        self.other_available_vacation = []
+        first = True
+        for available_vacation_year, available_vacation_days in sorted(available_vacations.items()):
+            if first:
+                first = False
+                while available_vacation_days > 0:
+                    key = 'Applicable worked year: {} Days quantity: {}'.format(
+                        available_vacation_year,
+                        available_vacation_days,
+                    )
+                    value = '{}-{}'.format(
+                        available_vacation_year,
+                        available_vacation_days,
+                    )
+                    days_quantity_choices.append(
+                        (value, key, )
+                    )
+                    available_vacation_days -= 7
+            else:
+                key = 'Applicable worked year: {} Days quantity: {}'.format(
+                    available_vacation_year,
+                    available_vacation_days,
+                )
+                self.other_available_vacation.append(key)
+        form.fields['year_days_quantity'] = forms.ChoiceField(
+            choices=days_quantity_choices,
+        )
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['other_available_vacation'] = self.other_available_vacation
+        return context
+
+    def form_valid(self, form):
+        applicable_worked_year, days_quantity = form.cleaned_data['year_days_quantity'].split('-')
+        from_date = form.cleaned_data['from_date']
+        Vacation.objects.create(
+            from_date=from_date,
+            days_quantity=int(days_quantity),
+            employee=self.request.user,
+            to_date=from_date + timedelta(days=int(days_quantity) - 1),
+            applicable_worked_year=int(applicable_worked_year),
+        )
+        return super().form_valid(form)
+
+
+class AdminVacationRequest(CreateView):
+    model = Vacation
+    success_url = reverse_lazy('home')
+    template_name = 'vacations_app/admin_vacation_request.html'
+    fields = ['employee', 'from_date', 'days_quantity', 'applicable_worked_year']
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields['from_date'] = forms.DateField(
+            widget=DatePickerInput(),
+        )
         form.fields['applicable_worked_year'] = forms.ChoiceField(
             choices=(
                 (2016, 2016, ),
@@ -66,43 +137,6 @@ class BaseVacationRequest(CreateView):
         days = form.instance.days_quantity
         form.instance.to_date = form.instance.from_date + timedelta(days=days - 1)
         return super().form_valid(form)
-
-
-class VacationRequest(BaseVacationRequest):
-    template_name = 'vacations_app/vacation_request.html'
-    fields = ['from_date', 'days_quantity', 'applicable_worked_year']
-
-    def get_form(self):
-        form = super().get_form()
-        form.fields['from_date'] = forms.DateField(
-            widget=DatePickerInput(),
-            validators=[validate_from_date],
-        )
-        form.fields['days_quantity'] = forms.ChoiceField(
-            choices=(
-                (7, 7),
-                (14, 14),
-                (21, 21),
-                (28, 28),
-            )
-        )
-        return form
-
-    def form_valid(self, form):
-        form.instance.employee = self.request.user
-        return super().form_valid(form)
-
-
-class AdminVacationRequest(BaseVacationRequest):
-    template_name = 'vacations_app/admin_vacation_request.html'
-    fields = ['employee', 'from_date', 'days_quantity', 'applicable_worked_year']
-
-    def get_form(self):
-        form = super().get_form()
-        form.fields['from_date'] = forms.DateField(
-            widget=DatePickerInput(),
-        )
-        return form
 
 
 class VacationList(PermissionRequiredMixin, ListView):

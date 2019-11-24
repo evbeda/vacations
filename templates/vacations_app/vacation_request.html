@@ -48,6 +48,19 @@
       </form>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Other pending vacations</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+  {% for other in other_available_vacation %}
+    <p>{{other}}</p><hr>
+  {% endfor %}
+    </div>
+  </div>
+
 {% endblock content %}
 {% block scripts %}
   {{ block.super }}
