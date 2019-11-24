@@ -27,6 +27,7 @@ from vacations_app.models import (
     AssignedVacations,
     Employee,
     Holiday,
+    Team,
     Vacation,
     validate_from_date,
 )
@@ -140,13 +141,13 @@ class AdminVacationRequest(CreateView):
         return super().form_valid(form)
 
 
-class VacationList(PermissionRequiredMixin, ListView):
+class VacationListView(PermissionRequiredMixin, ListView):
     template_name = 'vacations_app/vacation-list.html'
     permission_required = CAN_VIEW_OTHER_VACATIONS
     model = Vacation
 
 
-class TeamVacationsList(PermissionRequiredMixin, ListView):
+class TeamVacationsListView(PermissionRequiredMixin, ListView):
     template_name = 'vacations_app/team-vacations-list.html'
     permission_required = CAN_VIEW_TEAM_MEMBERS_VACATIONS
 
@@ -182,7 +183,7 @@ def render_to_pdf(template_src, context_dict={}):
     return HttpResponse(result.getvalue(), content_type='application/pdf') if not pdf.err else None
 
 
-class HolidayList(PermissionRequiredMixin, ListView):
+class HolidayListView(PermissionRequiredMixin, ListView):
     template_name = 'vacations_app/holiday-list.html'
     permission_required = CAN_VIEW_OTHER_VACATIONS
     model = Holiday
@@ -222,7 +223,7 @@ class HolidayUpdateView(PermissionRequiredMixin, UpdateView):
         return form
 
 
-class AssignedVacationsList(PermissionRequiredMixin, ListView):
+class AssignedVacationsListView(PermissionRequiredMixin, ListView):
     permission_required = CAN_VIEW_OTHER_VACATIONS
     model = AssignedVacations
 
@@ -247,7 +248,7 @@ class AssignedVacationDeleteView(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('assigned-vacations-list')
 
 
-class EmployeeList(PermissionRequiredMixin, ListView):
+class EmployeeListView(PermissionRequiredMixin, ListView):
     permission_required = CAN_VIEW_OTHER_VACATIONS
 
     def get_queryset(self):
@@ -270,3 +271,27 @@ class EmployeeUpdateView(PermissionRequiredMixin, UpdateView):
         )
         return form
 
+
+class TeamCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Team
+    fields = '__all__'
+    success_url = reverse_lazy('team-list')
+
+
+class TeamUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Team
+    fields = '__all__'
+    success_url = reverse_lazy('team-list')
+
+
+class TeamDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Team
+    success_url = reverse_lazy('team-list')
+
+
+class TeamListView(PermissionRequiredMixin, ListView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Team

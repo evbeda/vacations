@@ -1,0 +1,36 @@
+{% extends 'vacations_app/base.html' %}
+{% load static %}
+{% block head %}
+  {{block.super}}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock head %}
+{% block content %}
+
+{% if user.is_authenticated %}
+  <h1>Teams</h1>
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>Name</th>
+          <th>Manager</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+       {% for team in object_list %}
+      <tbody>
+      <tr>
+          <td>{{ team.name }}</td>
+          <td>{{ team.engineer_manager }}</td>
+          <td>
+            <a href="{% url 'team-update' team.id %}" class="btn btn-primary">Update team</a>
+            <a href="{% url 'team-delete' team.id %}" class="btn btn-primary">Delete team</a>
+          </td>
+        </tr>
+      </tbody>
+        {% endfor %}
+    </table>
+    <a href="{% url 'team-create' %}" class="btn btn-primary">Create team</a>
+
+  {% else %}
+{% endif %}
+{% endblock content %}
