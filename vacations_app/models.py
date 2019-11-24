@@ -124,7 +124,7 @@ class Employee(AbstractBaseUser, PermissionsMixin):
                     eoy_date = datetime(from_year, 12, 31)
                     monday_job_start_date = (self.job_start_date - timedelta(days=self.job_start_date.weekday()))
                     monday_eoy = (eoy_date - timedelta(days=eoy_date.weekday()))
-                    weeks = ((monday_eoy - monday_job_start_date).days // 7) or 1
+                    weeks = ((monday_eoy.date() - monday_job_start_date).days // 7) or 1
                     initial_annual_vacations_days = (weeks - 1) // 4
                 else:
                     initial_annual_vacations_days = self.initial_annual_vacations_days
