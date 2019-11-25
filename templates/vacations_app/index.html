@@ -35,7 +35,11 @@
   {% else %}
     <p class="lead">You have no vacations assigned</p>
   {% endif %}
+  {% if user.job_start_date %}
   <a href="{% url 'vacation-request' %}" class="btn btn-primary">Request vacation</a>
+  {% else %}
+    <p>Your account is not ready (like join date)... please talk to BX team</p>
+  {% endif %}
   {% if manager_user %}
     <a href="{% url 'vacations-team' %}" class="btn btn-info">View Team vacations</a>
   {% endif %}
