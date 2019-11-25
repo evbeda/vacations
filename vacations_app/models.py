@@ -89,6 +89,10 @@ class Employee(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return f'{self.first_name} {self.last_name}'
 
+    @property
+    def get_full_name_property(self):
+        return f'{self.first_name} {self.last_name}'
+
     def get_short_name(self):
         return self.first_name
 

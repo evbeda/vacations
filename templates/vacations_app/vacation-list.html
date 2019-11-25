@@ -1,5 +1,6 @@
 {% extends 'vacations_app/base.html' %}
 {% load static %}
+{% load bootstrap4 %}
 {% block head %}
   {{block.super}}
   <link rel="stylesheet" href="{% static 'css/index.css' %}">
@@ -8,6 +9,31 @@
 
 {% if user.is_authenticated %}
   <h1>Vacations</h1>
+     <div class="m-5">
+        <form action="" method="get" class="form form-inline">
+            {% csrf_token %}
+            <div class="m-2">
+                {% bootstrap_field filter.form.search_employee_by_full_name size='small' %}
+            </div>
+            <div class="m-2">
+                {% bootstrap_field filter.form.search_first_name size='small' %}
+            </div>
+            <div class="m-2">
+                {% bootstrap_field filter.form.search_last_name size='small' %}
+            </div>
+            <div class="m-2">
+                {% bootstrap_field filter.form.search_applicable_year size='small' %}
+            </div>
+            <div class="m-2">
+                {% bootstrap_field filter.form.search_by_from_date size='small' %}
+            </div>
+            <div class="m-2">
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">Search</button>
+                {% endbuttons %}
+            </div>
+        </form>
+    </div>
     <table class="table table-hover">
       <thead class="thead-dark">
         <tr>

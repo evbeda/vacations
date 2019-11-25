@@ -6,6 +6,8 @@ from datetime import timedelta
 from bootstrap_datepicker_plus import DatePickerInput
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django import forms
+from django.db.models import Q
+from django.forms import DateInput
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.urls import (
@@ -15,16 +17,23 @@ from django.urls import (
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import (
-    CreateView,
     DeleteView,
     FormView,
     UpdateView,
 )
+from django.views.generic.edit import CreateView
+from django_filters import (
+    CharFilter,
+    ChoiceFilter,
+    FilterSet,
+)
+from django_filters.views import FilterView
 from xhtml2pdf import pisa
 
 from vacations_app import (
     CAN_VIEW_OTHER_VACATIONS,
     CAN_VIEW_TEAM_MEMBERS_VACATIONS,
+    MONTHS,
 )
 from vacations_app.models import (
     AssignedVacations,
@@ -34,6 +43,63 @@ from vacations_app.models import (
     Vacation,
     validate_from_date,
 )
+
+class VacationFilter(FilterSet):
+
+    def get_full_name():
+        employees = []
+        employees_queryset = Employee.objects.all()
+        for employee in employees_queryset:
+            employee_dict = employee.id, employee.get_full_name_property
+            employees.append(employee_dict)
+        return employees
+
+    search_first_name = CharFilter(label="First name: ", method='search_employee_by_first_name')
+    search_last_name = CharFilter(label="Last name: ", method='search_employee_by_last_name')
+    search_applicable_year = CharFilter(label='Applicable year: ', method='search_vacation_by_applicable_year', lookup_expr='icontains',)
+    search_by_from_date = ChoiceFilter(
+        choices=MONTHS,
+        label='From date - month: ',
+        empty_label='Month',
+        method='search_vacation_by_from_date',
+        lookup_expr='icontains',
+    )
+    search_employee_by_full_name = ChoiceFilter(
+        choices=get_full_name(),
+        label='Employee: ',
+        empty_label='Employee',
+        method='search_employee',
+        lookup_expr='icontains',
+    )
+
+    def search_employee_by_first_name(self, qs, name, value):
+        return qs.filter(
+            Q(employee__first_name__icontains=value)
+        )
+
+    def search_employee_by_last_name(self, qs, name, value):
+        return qs.filter(
+            Q(employee__last_name__icontains=value)
+        )
+
+    def search_vacation_by_applicable_year(self, qs, name, value):
+        return qs.filter(
+            Q(applicable_worked_year__icontains=value)
+        )
+
+    def search_vacation_by_from_date(self, qs, name, value):
+        return qs.filter(
+            Q(from_date__month__icontains=value)
+        )
+
+    def search_employee(self, qs, name, value):
+        return qs.filter(
+            Q(employee=value)
+        )
+
+    class Meta:
+        model = Vacation
+        fields = ('search_first_name', 'search_last_name', 'search_applicable_year', 'search_by_from_date', 'search_employee_by_full_name')
 
 
 class HomeView(ListView):
@@ -144,13 +210,14 @@ class AdminVacationRequest(CreateView):
         return super().form_valid(form)
 
 
-class VacationListView(PermissionRequiredMixin, ListView):
+class VacationListView(PermissionRequiredMixin, FilterView, ListView):
+    queryset = Vacation.objects.all().order_by('-from_date')
     template_name = 'vacations_app/vacation-list.html'
+    filterset_class = VacationFilter
     permission_required = CAN_VIEW_OTHER_VACATIONS
 
     def get_queryset(self):
         return Vacation.objects.all().order_by('-from_date')
-
 
 class TeamVacationsListView(PermissionRequiredMixin, ListView):
     template_name = 'vacations_app/team-vacations-list.html'
