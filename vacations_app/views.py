@@ -90,12 +90,12 @@ class VacationFilter(FilterSet):
 
     def search_vacation_by_month_from_date(self, qs, name, value):
         return qs.filter(
-            Q(from_date__month__icontains=value)
+            Q(from_date__month=value)
         )
 
     def search_vacation_by_year_from_date(self, qs, name, value):
         return qs.filter(
-            Q(from_date__year__icontains=value)
+            Q(from_date__year=value)
         )
 
     def search_employee(self, qs, name, value):
