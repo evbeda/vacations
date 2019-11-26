@@ -9,6 +9,7 @@ dj-database-url==0.5.0
 Django==1.11.24
 django-bootstrap-datepicker-plus==3.0.5
 django-bootstrap4==1.0.1
+django-filter==2.2.0
 django-widget-tweaks==1.4.5
 freezegun==0.3.12
 gunicorn==19.9.0

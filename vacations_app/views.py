@@ -34,7 +34,8 @@ from xhtml2pdf import pisa
 from vacations_app import (
     CAN_VIEW_OTHER_VACATIONS,
     CAN_VIEW_TEAM_MEMBERS_VACATIONS,
-    MONTHS)
+    MONTHS,
+)
 from vacations_app.models import (
     AssignedVacations,
     Employee,
@@ -42,7 +43,9 @@ from vacations_app.models import (
     Team,
     Vacation,
     validate_from_date,
-    Employee)
+    Employee,
+)
+
 
 class VacationFilter(FilterSet):
 
@@ -56,13 +59,16 @@ class VacationFilter(FilterSet):
 
     search_first_name = CharFilter(label="First name: ", method='search_employee_by_first_name')
     search_last_name = CharFilter(label="Last name: ", method='search_employee_by_last_name')
-    search_applicable_year = CharFilter(label='Applicable year: ', method='search_vacation_by_applicable_year', lookup_expr='icontains',)
-    search_by_from_date = ChoiceFilter(
+    search_by_month_from_date = ChoiceFilter(
         choices=MONTHS,
         label='From date - month: ',
         empty_label='Month',
-        method='search_vacation_by_from_date',
+        method='search_vacation_by_month_from_date',
         lookup_expr='icontains',
+    )
+    search_by_year_from_date = CharFilter(
+        label='From date - year: ',
+        method='search_vacation_by_year_from_date',
     )
     search_employee_by_full_name = ChoiceFilter(
         choices=get_full_name(),
@@ -82,14 +88,14 @@ class VacationFilter(FilterSet):
             Q(employee__last_name__icontains=value)
         )
 
-    def search_vacation_by_applicable_year(self, qs, name, value):
-        return qs.filter(
-            Q(applicable_worked_year__icontains=value)
-        )
-
-    def search_vacation_by_from_date(self, qs, name, value):
+    def search_vacation_by_month_from_date(self, qs, name, value):
         return qs.filter(
             Q(from_date__month__icontains=value)
+        )
+
+    def search_vacation_by_year_from_date(self, qs, name, value):
+        return qs.filter(
+            Q(from_date__year__icontains=value)
         )
 
     def search_employee(self, qs, name, value):
@@ -99,7 +105,13 @@ class VacationFilter(FilterSet):
 
     class Meta:
         model = Vacation
-        fields = ('search_first_name', 'search_last_name', 'search_applicable_year', 'search_by_from_date', 'search_employee_by_full_name')
+        fields = (
+            'search_first_name',
+            'search_last_name',
+            'search_by_month_from_date',
+            'search_by_year_from_date',
+            'search_employee_by_full_name',
+        )
 
 
 class HomeView(ListView):

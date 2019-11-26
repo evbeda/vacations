@@ -184,6 +184,7 @@ class Vacation(models.Model):
             self.applicable_worked_year,
         )
 
+
 class Holiday(models.Model):
     name = models.CharField(max_length=50)
     date = models.DateField(unique=True)
