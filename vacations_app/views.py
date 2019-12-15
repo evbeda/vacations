@@ -71,7 +71,7 @@ class VacationFilter(FilterSet):
         method='search_vacation_by_year_from_date',
     )
     search_employee_by_full_name = ChoiceFilter(
-        choices=get_full_name(),
+        choices=get_full_name(),  # TODO: it's not working with empty db...
         label='Employee: ',
         empty_label='Employee',
         method='search_employee',
@@ -355,7 +355,7 @@ class EmployeeUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = CAN_VIEW_OTHER_VACATIONS
     model = Employee
     fields = [
-        'first_name', 'last_name',
+        'first_name', 'last_name', 'employee_company_id',
         'is_staff', 'job_start_date', 'initial_annual_vacations_days', 'team',
     ]
     success_url = reverse_lazy('employees-list')

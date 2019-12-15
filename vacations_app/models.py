@@ -66,6 +66,7 @@ class UserManager(BaseUserManager):
 
 class Employee(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
+    employee_company_id = models.IntegerField(null=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
