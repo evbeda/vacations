@@ -71,7 +71,7 @@ class VacationFilter(FilterSet):
         method='search_vacation_by_year_from_date',
     )
     search_employee_by_full_name = ChoiceFilter(
-        choices=get_full_name(),  # TODO: it's not working with empty db...
+        choices=get_full_name(),  # TODO: it's not working with empty db
         label='Employee: ',
         empty_label='Employee',
         method='search_employee',
