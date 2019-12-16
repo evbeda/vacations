@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from io import BytesIO
-from datetime import timedelta
+from datetime import (
+    datetime,
+    timedelta,
+)
 
 from bootstrap_datepicker_plus import DatePickerInput
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -30,6 +33,7 @@ from django_filters import (
 )
 from django_filters.views import FilterView
 from xhtml2pdf import pisa
+import xlwt
 
 from vacations_app import (
     CAN_VIEW_OTHER_VACATIONS,
@@ -228,6 +232,51 @@ class VacationListView(PermissionRequiredMixin, FilterView, ListView):
     template_name = 'vacations_app/vacation-list.html'
     filterset_class = VacationFilter
     permission_required = CAN_VIEW_OTHER_VACATIONS
+
+    def get(self, *args, **kwargs):
+        return super(VacationListView, self).get(*args, **kwargs)
+
+
+class VacationDownloadListView(VacationListView):
+
+    def get(self, request, *args, **kwargs):
+        xls_name = 'vacaciones'
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="{}_{}.xls"'.format(xls_name, datetime.now())
+        workbook = xlwt.Workbook(encoding='utf-8')
+        worksheet = workbook.add_sheet('Vacaciones')
+
+        title_style = xlwt.XFStyle()
+        title_style.font.bold = True
+        title_style.font.height = 18 * 20  # you need to multiply by 20 always
+        worksheet.write(0, 0, xls_name.replace('_', ' ').capitalize(), title_style)
+
+        col_header_style = xlwt.XFStyle()
+        col_header_style.font.bold = True
+
+        worksheet.write(1, 0, "Empleado", col_header_style)
+        worksheet.write(1, 1, "Legajo", col_header_style)
+        worksheet.write(1, 2, "Desde", col_header_style)
+        worksheet.write(1, 3, "Hasta", col_header_style)
+        worksheet.write(1, 4, "Cantidad días", col_header_style)
+        worksheet.write(1, 5, "Año aplicado", col_header_style)
+        filterset_class = self.get_filterset_class()
+        self.filterset = self.get_filterset(filterset_class)
+
+        if not self.filterset.is_bound or self.filterset.is_valid() or not self.get_strict():
+            self.object_list = self.filterset.qs
+        else:
+            self.object_list = self.filterset.queryset.none()
+
+        for index, vacation in enumerate(self.object_list):
+            worksheet.write(index + 2, 0, vacation.employee.get_full_name())
+            worksheet.write(index + 2, 1, vacation.employee.employee_company_id)
+            worksheet.write(index + 2, 2, vacation.from_date.strftime(format='%d-%m-%y'))
+            worksheet.write(index + 2, 3, vacation.to_date.strftime(format='%d-%m-%y'))
+            worksheet.write(index + 2, 4, vacation.days_quantity)
+            worksheet.write(index + 2, 5, vacation.applicable_worked_year)
+        workbook.save(response)
+        return response
 
 
 class TeamVacationsListView(PermissionRequiredMixin, ListView):

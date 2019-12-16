@@ -9,6 +9,9 @@
 
 {% if user.is_authenticated %}
   <h1>Vacations</h1>
+
+      <a href="{% url 'vacations-download' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-primary">Download</a>
+
      <div class="m-5">
         <form action="" method="get" class="form form-inline">
             {% csrf_token %}
@@ -47,7 +50,7 @@
        {% for vacation in object_list %}
       <tbody>
       <tr>
-          <td>{{ vacation.employee.first_name }} {{ vacation.employee.last_name }} </td>
+          <td>{{ employee.employee_company_id|default:"" }} {{ vacation.employee.first_name }} {{ vacation.employee.last_name }} </td>
           <td>{{ vacation.from_date|date }}</td>
           <td>{{ vacation.to_date|date }}</td>
           <td>{{ vacation.days_quantity }}</td>
@@ -56,6 +59,5 @@
       </tbody>
         {% endfor %}
     </table>
-  {% else %}
 {% endif %}
 {% endblock content %}
