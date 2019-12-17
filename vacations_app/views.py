@@ -315,7 +315,9 @@ def render_to_pdf(template_src, context_dict={}):
 class HolidayListView(PermissionRequiredMixin, ListView):
     template_name = 'vacations_app/holiday-list.html'
     permission_required = CAN_VIEW_OTHER_VACATIONS
-    model = Holiday
+
+    def get_queryset(self):
+        return Holiday.objects.all().order_by('-date')
 
 
 class HolidayCreateView(PermissionRequiredMixin, CreateView):
@@ -350,6 +352,30 @@ class HolidayUpdateView(PermissionRequiredMixin, UpdateView):
             widget=DatePickerInput(),
         )
         return form
+
+
+class AutoHolidayForm(forms.Form):
+    year = forms.IntegerField()
+
+
+class AutoHolidayView(PermissionRequiredMixin, FormView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    template_name = 'vacations_app/holiday_auto_form.html'
+    form_class = AutoHolidayForm
+    success_url = reverse_lazy('holidays-list')
+
+    def form_valid(self, form):
+        import requests
+        year = form.cleaned_data['year']
+        response = requests.get(
+            'http://nolaborables.com.ar/api/v2/feriados/{}'.format(year))
+        days = response.json()
+        for day in days:
+            try:
+                Holiday.objects.create(name=day['motivo'], date=datetime(year, day['mes'], day['dia']))
+            except Exception:
+                pass
+        return super().form_valid(form)
 
 
 class AssignedVacationsListView(PermissionRequiredMixin, ListView):

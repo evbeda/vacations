@@ -8,6 +8,8 @@
 
 {% if user.is_authenticated %}
   <h1>Holidays</h1>
+    <a href="{% url 'holidays-create' %}" class="btn btn-primary">Create Holiday</a>
+    <a href="{% url 'holidays-auto-create' %}" class="btn btn-primary">Auto Create Holiday</a>
     <table class="table table-hover">
       <thead class="thead-dark">
         <tr>
@@ -29,7 +31,6 @@
       </tbody>
         {% endfor %}
     </table>
-    <a href="{% url 'holidays-create' %}" class="btn btn-primary">Create Holiday</a>
 
   {% else %}
 {% endif %}
