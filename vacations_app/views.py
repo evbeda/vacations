@@ -233,9 +233,6 @@ class VacationListView(PermissionRequiredMixin, FilterView, ListView):
     filterset_class = VacationFilter
     permission_required = CAN_VIEW_OTHER_VACATIONS
 
-    def get(self, *args, **kwargs):
-        return super(VacationListView, self).get(*args, **kwargs)
-
 
 class VacationDownloadListView(VacationListView):
 
@@ -405,7 +402,24 @@ class EmployeeUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = CAN_VIEW_OTHER_VACATIONS
     model = Employee
     fields = [
-        'first_name', 'last_name', 'employee_company_id',
+        'email', 'first_name', 'last_name', 'employee_company_id',
+        'is_staff', 'job_start_date', 'initial_annual_vacations_days', 'team',
+    ]
+    success_url = reverse_lazy('employees-list')
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields['job_start_date'] = forms.DateField(
+            widget=DatePickerInput(),
+        )
+        return form
+
+
+class EmployeeCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Employee
+    fields = [
+        'email', 'first_name', 'last_name', 'employee_company_id',
         'is_staff', 'job_start_date', 'initial_annual_vacations_days', 'team',
     ]
     success_url = reverse_lazy('employees-list')
