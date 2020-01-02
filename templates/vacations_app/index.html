@@ -27,7 +27,7 @@
         <td>{{ vacation.to_date|date }}</td>
         <td>{{ vacation.days_quantity }}</td>
         <td>{{ vacation.applicable_worked_year }}</td>
-        <td><a href="{% url 'print' pk=vacation.id %}" class="btn btn-success">Print Request</a></td>
+        <td><a href="{% url 'print' pk=vacation.id %}" class="btn btn-success" target="_blank">Print Request</a></td>
       </tr>
     </tbody>
     {% endfor %}
