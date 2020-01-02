@@ -299,11 +299,6 @@ class VacationPrintView(DetailView):
     template_name = 'vacations_app/vacation_print_form.html'
     model = Vacation
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['today'] = datetime.now()
-        return context
-
     def render_to_response(self, context, **response_kwargs):
         pdf = render_to_pdf(self.template_name, context)
         return HttpResponse(pdf, content_type='application/pdf')
