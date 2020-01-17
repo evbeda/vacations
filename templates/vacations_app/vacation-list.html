@@ -45,6 +45,7 @@
           <th>To Date</th>
           <th>Days quantity</th>
           <th>Applicable Year</th>
+          <th>Actions</th>
         </tr>
       </thead>
        {% for vacation in object_list %}
@@ -55,6 +56,9 @@
           <td>{{ vacation.to_date|date }}</td>
           <td>{{ vacation.days_quantity }}</td>
           <td>{{ vacation.applicable_worked_year }}</td>
+          <td>
+            <a href="{% url 'vacation-admin-delete' vacation.id %}" class="btn btn-primary">Delete request</a>
+          </td>
         </tr>
       </tbody>
         {% endfor %}

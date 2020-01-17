@@ -200,6 +200,12 @@ class VacationRequest(FormView):
         return super().form_valid(form)
 
 
+class AdminVacationRequestDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = CAN_VIEW_OTHER_VACATIONS
+    model = Vacation
+    success_url = reverse_lazy('vacations-list')
+
+
 class AdminVacationRequest(CreateView):
     model = Vacation
     success_url = reverse_lazy('home')
