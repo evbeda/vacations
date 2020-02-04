@@ -1,0 +1,11 @@
+{% extends 'vacations_app/base.html' %}
+{% load static %}
+{% block head %}
+  {{block.super}}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock head %}
+{% block content %}
+  <h2>Login</h2>
+  <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-primary">Login</a>
+  <br>
+{% endblock %}
